@@ -1,0 +1,43 @@
+channel: robin
+version: api/v1
+context: feedback
+base-path: /${channel}/${version}/${context}
+
+server:
+  port: 8090
+
+project:
+  env: local
+  name: polls robin food
+  layer: distribution
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  data:
+    mongodb:
+      port: 27017
+      host: localhost
+      database: polls
+
+springdoc:
+  api-docs:
+    path: ${base-path}/api-docs
+  swagger-ui:
+    path: ${base-path}/swagger.html
+    disable-swagger-default-url: true
+
+adapters:
+  rest-client:
+    base-url: http://localhost:3006/int/robinfood/feedback/api/consumer
+    allowed-headers: app-robin
+    resources:
+      retrieve-poll: /poll
+
+entry-points:
+  path-base: ${base-path}
+  pollRoutes:
+    savePoll: /poll
+    retrievePoll: /poll
+  answerRoutes:
+    saveAnswer: /answer
